@@ -107,7 +107,19 @@ test('loading firmware before boot connection and backup preserves the verified 
  a.el('#firmwareCatalog').value='p713-e350';a.el('#firmwareCatalog').onchange();await a.el('#loadCatalogFirmware').onclick();
  await ui.attachBoot({vendorId:0x0b05,productId:0x1a93,collections:[{usagePage:0xff01,outputReports:[{reportId:0,items:[{reportSize:8,reportCount:64}]}]}],async open(){}});
  await a.el('#bootDump').onclick();a.el('#bootExport').onclick();
- a.el('#physicalRecovery').checked=true;a.el('#backupSaved').checked=true;a.el('#flashConfirm').value='FLASH';a.el('#flashConfirm').oninput();
+ a.el('#physicalRecovery').checked=true;a.el('#allowWithoutBackup').checked=true;a.el('#flashConfirm').value='FLASH';a.el('#flashConfirm').oninput();
  assert.equal(a.el('#bootFlash').disabled,false);assert.equal(a.el('#flashReadiness').textContent,'Ready to flash the checked image.');assert.equal(writes,0);
- a.el('#backupSaved').checked=false;a.el('#backupSaved').onchange();assert.equal(a.el('#bootFlash').disabled,true);assert.match(a.el('#flashReadiness').textContent,/Confirm backup files were saved/);
+ a.el('#allowWithoutBackup').checked=false;a.el('#allowWithoutBackup').onchange();assert.equal(a.el('#bootFlash').disabled,true);assert.match(a.el('#flashReadiness').textContent,/Accept flashing risk/);
+});
+
+test('flashing can be enabled without reading or exporting a dump only after explicit risk acceptance',async()=>{
+ const F=require('./firmware.js');let dumps=0,flashes=0;
+ class Boot {async check(){}async dump(){dumps++;throw Error('Unexpected dump')}async flash(bytes,auth){flashes++;assert.equal(auth.allowWithoutBackup,true);return {hash:'B'.repeat(64)}}}
+ const a=app(undefined,{...F,Bootloader:Boot,WebHIDLink:class{},loadCatalogImage:async()=>({name:'fixture',hash:'B'.repeat(64),bytes:new Uint8Array(F.SIZE)})});
+ const ui=a.context.createHarpeToolsUI({getConnection:()=>({busy:false}),extension:{getStatus:()=>({})},changedState(){},download(){},log(){}});
+ await ui.attachBoot({vendorId:0x0b05,productId:0x1a93,collections:[{usagePage:0xff01,outputReports:[{reportId:0,items:[{reportSize:8,reportCount:64}]}]}],async open(){}});
+ a.el('#firmwareCatalog').value='p713-e350';a.el('#firmwareCatalog').onchange();await a.el('#loadCatalogFirmware').onclick();
+ a.el('#physicalRecovery').checked=true;a.el('#flashConfirm').value='FLASH';a.el('#flashConfirm').oninput();assert.equal(a.el('#bootFlash').disabled,true);
+ a.el('#allowWithoutBackup').checked=true;a.el('#allowWithoutBackup').onchange();assert.equal(a.el('#bootFlash').disabled,false);assert.doesNotMatch(a.el('#flashReadiness').textContent,/dump|Export backup/);
+ await a.el('#bootFlash').onclick();assert.equal(dumps,0);assert.equal(flashes,1);
 });

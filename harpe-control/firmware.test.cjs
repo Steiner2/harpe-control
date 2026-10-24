@@ -23,3 +23,9 @@ test('erase and program verification failures abort without retry or restart',as
 test('unknown source permits only explicitly confirmed exact stock recovery',async()=>{const unknown=Uint8Array.from(stock);unknown[10]^=1;let l=new Link(unknown),b=new F.Bootloader(l);await assert.rejects(b.flash(repeat,auth),/only exact stock/);assert.ok(!l.sent.some(p=>p[0]===16));await assert.rejects(b.flash(stock,auth),/Explicit stock/);assert.ok(!l.sent.some(p=>p[0]===16));const r=await b.flash(stock,{...auth,stockRecovery:true});assert.equal(r.pages,1);assert.equal(await F.sha(l.memory),F.STOCK);});
 test('concurrent flash is refused even during image hashing',async()=>{const b=new F.Bootloader(new Link());const first=b.flash(repeat,auth);await assert.rejects(b.flash(repeat,auth),/already running/);await first;});
 test('WebHID uses report zero and rejects unaligned erases before sending',async()=>{const sent=[],listeners={};const d={opened:true,addEventListener:(k,v)=>listeners[k]=v,removeEventListener:()=>{},sendReport:async(id,p)=>{sent.push([id,p]);if(p[0]===130)listeners.inputreport({reportId:0,data:new DataView(Uint8Array.from([2,25,0,2]).buffer)})}};const l=new F.WebHIDLink(d);assert.equal((await l.query(130,2))[1],25);assert.equal(sent[0][0],0);assert.equal(sent[0][1].length,64);await l.send([32,1,192,1,0]);await assert.rejects(l.send([31,1]),/aligned/);assert.equal(sent.length,2);});
+
+test('explicit risk acceptance permits no-export flashing while source and final verification remain mandatory',async()=>{
+ const l=new Link(),b=new F.Bootloader(l),risk={physicalRecovery:true,allowWithoutBackup:true,confirmation:'FLASH'};
+ const r=await b.flash(repeat,risk);assert.equal(r.verified,true);assert.equal(await F.sha(l.memory),hash(repeat));
+ const u=new Link(new Uint8Array(F.SIZE)),other=new F.Bootloader(u);await assert.rejects(other.flash(repeat,risk),/only exact stock/);assert.equal(u.unlocked,false);
+});

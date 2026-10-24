@@ -45,7 +45,7 @@ class Bootloader{
  async readAll(progress=()=>{}){const b=new Uint8Array(SIZE);for(let i=0;i<SIZE;i+=PAGE){b.set(await this.readPage(START+i),i);progress(i+PAGE,SIZE)}return b;}
  async dump(progress){if(this.busy)throw Error('Bootloader operation already running.');this.busy=true;try{await this.check();const bytes=await this.readAll(progress),hash=await sha(bytes);this.verifiedHash=IMAGES[hash]?hash:null;return {bytes,hash,name:IMAGES[hash]||'Unknown application',start:START,size:SIZE,bootloader:'2.00.19',includesConfiguration:false};}finally{this.busy=false}}
  async flash(target,authorization,progress=()=>{}){
-  if(!authorization?.physicalRecovery||!authorization?.backupSaved||authorization?.confirmation!=='FLASH')throw Error('Physical recovery, a saved backup and FLASH confirmation are required.');
+  if(!authorization?.physicalRecovery||!(authorization?.backupSaved||authorization?.allowWithoutBackup)||authorization?.confirmation!=='FLASH')throw Error('Physical recovery, backup or explicit flashing-risk acceptance, and FLASH confirmation are required.');
   if(this.busy)throw Error('Bootloader operation already running.');this.busy=true;this.verifiedHash=null;
   try{const image=await inspectImage(target);await this.check();const before=await this.readAll((n,t)=>progress('before',n,t)),p=await plan(before,image.bytes);if(p.recovery&&!authorization.stockRecovery)throw Error('Explicit stock recovery confirmation is required for an unknown application.');
    if(p.pages.length){await this.link.send([0x10,65,83,85,83,72,73,68,70,87,85]);if(!((await this.ready())[1]&128))throw Error('Bootloader did not enable programming.');}
