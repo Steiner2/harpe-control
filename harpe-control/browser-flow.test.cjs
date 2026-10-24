@@ -97,3 +97,17 @@ test('failed data upload reports exact DATA phase and does not claim success',as
 
 test('firmware dropdown shows exact device purpose and loading never accesses the mouse or enables flashing alone',async()=>{let loads=0;const F=require('./firmware.js'),a=app(undefined,{...F,loadCatalogImage:async id=>{loads++;assert.equal(id,'p713-e350');return F.inspectImage(fs.readFileSync(__dirname+'/../firmware/P713-HCEX-named-E3505A86.bin'));}});assert.equal(loads,0);a.el('#firmwareCatalog').value='p713-e350';a.el('#firmwareCatalog').onchange();assert.match(a.el('#firmwareCatalogHint').textContent,/on-device keyboard macros/);assert.equal(a.el('#loadCatalogFirmware').disabled,false);assert.equal(a.el('#downloadCatalogFirmware').hidden,false);await a.el('#loadCatalogFirmware').onclick();assert.equal(loads,1);assert.match(a.el('#imageStatus').textContent,/ROG Harpe Ace Aim Lab Edition/);assert.equal(a.el('#bootFlash').disabled,true);assert.equal(a.mouse.sent.length,0);assert.equal(a.chooserCalls(),0);});
 test('failed catalog load leaves flashing blocked and reports failure',async()=>{const F=require('./firmware.js'),a=app(undefined,{...F,loadCatalogImage:async()=>{throw Error('Checksum mismatch')}});a.el('#firmwareCatalog').value='p713-e350';a.el('#firmwareCatalog').onchange();await a.el('#loadCatalogFirmware').onclick();assert.equal(a.el('#bootFlash').disabled,true);assert.match(a.el('#imageStatus').textContent,/Checksum mismatch/);assert.equal(a.mouse.sent.length,0);});
+
+test('loading firmware before boot connection and backup preserves the verified target and explains flash gates',async()=>{
+ const F=require('./firmware.js');let writes=0;
+ class Boot {async check(){}async dump(){return {name:'fixture',hash:'A'.repeat(64),bytes:new Uint8Array(F.SIZE)}}async flash(){writes++}}
+ const a=app(undefined,{...F,Bootloader:Boot,WebHIDLink:class{},loadCatalogImage:async()=>({name:'fixture',hash:'B'.repeat(64),bytes:new Uint8Array(F.SIZE)})});
+ const ui=a.context.createHarpeToolsUI({getConnection:()=>({busy:false}),extension:{getStatus:()=>({})},changedState(){},download(){},log(){}});
+ ui.draw();assert.match(a.el('#flashReadiness').textContent,/Connect the mouse in bootloader mode/);
+ a.el('#firmwareCatalog').value='p713-e350';a.el('#firmwareCatalog').onchange();await a.el('#loadCatalogFirmware').onclick();
+ await ui.attachBoot({vendorId:0x0b05,productId:0x1a93,collections:[{usagePage:0xff01,outputReports:[{reportId:0,items:[{reportSize:8,reportCount:64}]}]}],async open(){}});
+ await a.el('#bootDump').onclick();a.el('#bootExport').onclick();
+ a.el('#physicalRecovery').checked=true;a.el('#backupSaved').checked=true;a.el('#flashConfirm').value='FLASH';a.el('#flashConfirm').oninput();
+ assert.equal(a.el('#bootFlash').disabled,false);assert.equal(a.el('#flashReadiness').textContent,'Ready to flash the checked image.');assert.equal(writes,0);
+ a.el('#backupSaved').checked=false;a.el('#backupSaved').onchange();assert.equal(a.el('#bootFlash').disabled,true);assert.match(a.el('#flashReadiness').textContent,/Confirm backup files were saved/);
+});

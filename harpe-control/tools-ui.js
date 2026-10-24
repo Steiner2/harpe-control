@@ -9,6 +9,16 @@ root.createHarpeToolsUI=function({getConnection,extension,changedState,download,
   $('#checkFirmware').disabled=blocked||!normal;$('#bootConnect').disabled=blocked||!!c.device;$('#bootDump').disabled=blocked||!boot;$('#bootExport').disabled=blocked||!snapshot;$('#bootRestart').disabled=blocked||!boot?.verifiedHash;
   $('#firmwareCatalog').disabled=blocked;$('#loadCatalogFirmware').disabled=blocked||!F.CATALOG[$('#firmwareCatalog').value];
   $('#bootImage').disabled=busy;$('#bootFlash').disabled=blocked||!boot||!snapshot||!target||!exported||!$('#physicalRecovery').checked||!$('#backupSaved').checked||$('#flashConfirm').value!=='FLASH';
+  const missing=[];
+  if(blocked)missing.push('Wait for the current operation to finish');
+  if(!boot)missing.push('Connect the mouse in bootloader mode');
+  if(!snapshot)missing.push('Read application dump');
+  if(!exported)missing.push('Export backup');
+  if(!target)missing.push('Load selected firmware');
+  if(!$('#physicalRecovery').checked)missing.push('Confirm physical recovery');
+  if(!$('#backupSaved').checked)missing.push('Confirm backup files were saved');
+  if($('#flashConfirm').value!=='FLASH')missing.push('Type FLASH exactly');
+  note('flashReadiness',missing.length?'Still required: '+missing.join(' · '):'Ready to flash the checked image.');
   $('#debounceRead').disabled=blocked||!normal;$('#debounceApply').disabled=blocked||!normal||!debounceReadable||$('#debouncePreset').value==='';
   $('#calStart').disabled=!!trial&&!finished;$('#calFinish').disabled=!trial||finished;$('#calKeep').disabled=!trial||!finished;$('#calDiscard').disabled=!trial;$('#calExport').disabled=!trials.length;$('#calAnalyze').disabled=!trials.length;
  }
@@ -19,11 +29,11 @@ root.createHarpeToolsUI=function({getConnection,extension,changedState,download,
  async function attachBoot(device){
   const collections=cs=>cs.flatMap(c=>[c,...collections(c.children||[])]);const report=collections(device.collections||[]).filter(c=>c.usagePage===0xff01).flatMap(c=>c.outputReports||[]).find(r=>r.reportId===0&&r.items.reduce((n,i)=>n+i.reportSize*i.reportCount,0)===512);
   if(device.vendorId!==0x0b05||device.productId!==0x1a93||!report)throw Error('Not the verified P713 bootloader interface.');
-  await device.open();const link=new F.WebHIDLink(device);try{boot=new F.Bootloader(link);await boot.check();bootDevice=device;snapshot=null;target=null;exported=false;note('firmwareResult','Bootloader detected · 2.00.19. Read and export an application backup before flashing.');draw();return 'Bootloader detected · 2.00.19';}catch(e){await link.close();boot=null;throw e}
+  await device.open();const link=new F.WebHIDLink(device);try{boot=new F.Bootloader(link);await boot.check();bootDevice=device;snapshot=null;exported=false;note('firmwareResult','Bootloader detected · 2.00.19. Read and export an application backup before flashing.');draw();return 'Bootloader detected · 2.00.19';}catch(e){await link.close();boot=null;throw e}
  }
  async function disconnect(){if(boot){await boot.link.close();boot=null}bootDevice=null;snapshot=null;target=null;exported=false;draw();}
  $('#bootConnect').onclick=()=>$('#connect').onclick();$('#checkFirmware').onclick=async()=>{await extension.probe();draw()};$('#macroCheck').onclick=()=>$('#checkFirmware').onclick();
- $('#bootDump').onclick=()=>run(async()=>{snapshot=null;exported=false;target=null;snapshot=await boot.dump((n,t)=>{$('#bootProgress').max=t;$('#bootProgress').value=n});note('firmwareResult','Application dump complete · '+snapshot.name+' · SHA-256 '+snapshot.hash);});
+ $('#bootDump').onclick=()=>run(async()=>{snapshot=null;exported=false;snapshot=await boot.dump((n,t)=>{$('#bootProgress').max=t;$('#bootProgress').value=n});note('firmwareResult','Application dump complete · '+snapshot.name+' · SHA-256 '+snapshot.hash);});
  $('#bootExport').onclick=()=>{if(!snapshot)return;download('harpe-application-'+snapshot.hash.slice(0,8)+'.bin',snapshot.bytes,'application/octet-stream');download('harpe-application-backup.json',{format:'harpe-application-backup',version:1,sha256:snapshot.hash,bytes:F.SIZE,start:F.START,includesConfiguration:false,bootloader:'2.00.19'});exported=true;note('firmwareResult','Backup export requested. Confirm that both files were saved before flashing.');draw();};
  $('#firmwareCatalog').onchange=()=>{if(busy||getConnection().busy)return;target=null;const item=F.CATALOG[$('#firmwareCatalog').value];note('imageStatus','');note('firmwareCatalogHint',item?item.description:'Choose your device to see the available firmware.');const link=$('#downloadCatalogFirmware');link.hidden=!item;if(item){link.href=item.url;link.download=item.url.split('/').pop();link.textContent='Download .bin';}draw();};
  $('#loadCatalogFirmware').onclick=()=>run(async()=>{const id=$('#firmwareCatalog').value,item=F.CATALOG[id];target=null;if(!item)throw Error('Select your exact mouse model first.');note('imageStatus','Downloading and verifying selected firmware…');try{const checked=await F.loadCatalogImage(id);if($('#firmwareCatalog').value!==id)throw Error('Firmware selection changed while loading.');target=checked;note('imageStatus',item.device+' · '+checked.name+' · SHA-256 '+checked.hash+' · Ready for the separate backup and flash steps.');}catch(error){target=null;note('imageStatus',error.message);throw error;}},'imageStatus');
