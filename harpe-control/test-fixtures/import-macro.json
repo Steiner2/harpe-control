@@ -1,0 +1,22 @@
+{
+  "format": "harpe-control-macro",
+  "version": 2,
+  "name": "Importprüfung",
+  "mode": "once",
+  "target": "forward",
+  "repeat": 2,
+  "events": [
+    {
+      "type": "keydown",
+      "value": "KeyE"
+    },
+    {
+      "type": "delay",
+      "value": 50
+    },
+    {
+      "type": "keyup",
+      "value": "KeyE"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+const fs=require('node:fs'),path=require('node:path'),{createHash}=require('node:crypto');
+const root=path.resolve(__dirname,'..'),src=path.join(root,'harpe-control'),out=path.join(root,'dist');fs.mkdirSync(path.join(out,'guides'),{recursive:true});
+let html=fs.readFileSync(path.join(src,'index.html'),'utf8');
+html=html.replace('src="harpe-ace.svg"','src="data:image/svg+xml;base64,'+fs.readFileSync(path.join(src,'harpe-ace.svg')).toString('base64')+'"');
+html=html.replace('<link rel="stylesheet" href="style.css">',()=>'<style>'+fs.readFileSync(path.join(src,'style.css'),'utf8')+'</style>');
+for(const name of ['i18n.js','firmware.js','debounce.js','tools-ui.js','protocol.js','macros.js','composer.js','transport.js','firmware-extension/client.js','extension-ui.js','app.js'])html=html.replace('<script src="'+name+'"></script>',()=>'<script>\n'+fs.readFileSync(path.join(src,name),'utf8')+'\n</script>');
+const docs=['USAGE','FIRMWARE-TOOLS','DEBOUNCE','HARDWARE-GUIDE','SOURCES','PUBLISHING'];
+for(const name of docs)html=html.replaceAll('href="'+name+'.md"','href="guides/'+name.toLowerCase()+'.html"');
+const hashes=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>"'sha256-"+createHash('sha256').update(m[1]).digest('base64')+"'");
+const csp="default-src 'self'; script-src 'self' "+hashes.join(' ')+"; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'";
+html=html.replace('<head>','<head><meta http-equiv="Content-Security-Policy" content="'+csp+'">');
+fs.writeFileSync(path.join(out,'index.html'),html);fs.writeFileSync(path.join(out,'.nojekyll'),'');fs.copyFileSync(path.join(root,'LICENSE'),path.join(out,'LICENSE.txt'));fs.copyFileSync(path.join(root,'NOTICE'),path.join(out,'NOTICE.txt'));
+const escape=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function inline(s){return escape(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\[([^\]]+)\]\(([^)]+)\)/g,(_,label,url)=>{if(!/^(https:\/\/|[\w.-]+\.md$)/.test(url))return label;return '<a href="'+url.replace(/\.md$/,'.html').replace(/([A-Z][A-Z-]+)\.html$/,m=>m.toLowerCase())+'">'+label+'</a>';});}
+for(const name of docs){const source=fs.readFileSync(path.join(root,'docs',name+'.md'),'utf8');let body='',code=false,list=false;for(const line of source.split(/\r?\n/)){if(line.startsWith('```')){if(list){body+='</ul>';list=false;}body+=code?'</code></pre>':'<pre><code>';code=!code;continue;}if(code){body+=escape(line)+'\n';continue;}const heading=/^(#{1,3}) (.*)$/.exec(line);if(!line.startsWith('- ')&&list){body+='</ul>';list=false;}if(heading)body+='<h'+heading[1].length+'>'+inline(heading[2])+'</h'+heading[1].length+'>';else if(line.startsWith('- ')){if(!list){body+='<ul>';list=true;}body+='<li>'+inline(line.slice(2))+'</li>';}else if(line.trim())body+='<p>'+inline(line)+'</p>';}if(list)body+='</ul>';
+fs.writeFileSync(path.join(out,'guides',name.toLowerCase()+'.html'),'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+escape(name)+' · Harpe Control</title><style>body{background:#10141e;color:#e8edf6;font:16px/1.65 system-ui;max-width:850px;margin:40px auto;padding:0 24px}a{color:#7ee8cf}h1,h2,h3{line-height:1.2}h2{margin-top:2em}pre,code{background:#202737;border-radius:6px}pre{padding:18px;overflow:auto}code{padding:2px 4px}nav{margin-bottom:30px}li{margin:8px 0}</style></head><body><nav><a href="../index.html">← Harpe Control</a></nav>'+body+'</body></html>');}
+console.log('Built dist/index.html and '+docs.length+' English guides.');

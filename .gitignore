@@ -1,0 +1,23 @@
+# Generated site and private device data
+dist/
+node_modules/
+Harpe-Control.html
+**/build*/
+**/research/
+**/__pycache__/
+*.bin
+!harpe-control/test-fixtures/named-macro-v1.bin
+*.elf
+*.zip
+*.exe
+*.dll
+*.msi
+*.pyc
+.env
+.env.*
+*.pem
+*.key
+harpe-settings*.json
+harpe-diagnostics*.json
+harpe-macro.json
+harpe-persistence-diagnostics*.json

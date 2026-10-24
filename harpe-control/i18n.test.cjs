@@ -1,0 +1,7 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+test('runtime language toggle preserves source strings, names, inputs and raw data',()=>{
+ const node=(value,skip=false)=>({nodeValue:value,parentElement:{closest:()=>skip}}),nodes=[node('DPI-Stufen'),node('Bootloader detected'),node('DPI-Stufen',true)];const select={value:'en'},input={value:'My user macro'};let stored={};
+ const document={body:{},documentElement:{},createTreeWalker(){let i=0;return {nextNode:()=>nodes[i++]||null}},querySelector:()=>select,querySelectorAll:()=>[]};
+ const c=vm.createContext({document,localStorage:{getItem:k=>stored[k],setItem:(k,v)=>stored[k]=v}});vm.runInContext(fs.readFileSync(__dirname+'/i18n.js','utf8'),c);c.HarpeI18n.start();assert.equal(document.documentElement.lang,'en');assert.equal(nodes[0].nodeValue,'DPI stages');c.HarpeI18n.setLanguage('de');assert.equal(nodes[0].nodeValue,'DPI-Stufen');assert.equal(nodes[1].nodeValue,'Bootloader erkannt');c.HarpeI18n.setLanguage('en');assert.equal(nodes[1].nodeValue,'Bootloader detected');assert.equal(nodes[2].nodeValue,'DPI-Stufen');assert.equal(input.value,'My user macro');assert.equal(stored['harpe-language'],'en');
+ nodes[0].nodeValue='Speichern';c.HarpeI18n.render();assert.equal(nodes[0].nodeValue,'Save');c.HarpeI18n.setLanguage('de');assert.equal(nodes[0].nodeValue,'Speichern');
+});

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 440" fill="none">
+ <defs>
+  <linearGradient id="body" x1="91" y1="52" x2="276" y2="362" gradientUnits="userSpaceOnUse"><stop stop-color="#505656"/><stop offset=".4" stop-color="#343b3d"/><stop offset="1" stop-color="#1b2225"/></linearGradient>
+  <linearGradient id="left" x1="113" y1="42" x2="173" y2="212" gradientUnits="userSpaceOnUse"><stop stop-color="#60696b"/><stop offset="1" stop-color="#31393b"/></linearGradient>
+  <linearGradient id="right" x1="208" y1="47" x2="250" y2="220" gradientUnits="userSpaceOnUse"><stop stop-color="#4e585b"/><stop offset="1" stop-color="#293236"/></linearGradient>
+  <linearGradient id="rim" x1="62" y1="164" x2="116" y2="390" gradientUnits="userSpaceOnUse"><stop stop-color="#313e44"/><stop offset="1" stop-color="#10191d"/></linearGradient>
+  <linearGradient id="wheel" x1="169" y1="76" x2="189" y2="133" gradientUnits="userSpaceOnUse"><stop stop-color="#72e6ed"/><stop offset="1" stop-color="#258cab"/></linearGradient>
+  <radialGradient id="ground"><stop stop-color="#000" stop-opacity=".5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+ </defs>
+ <ellipse cx="185" cy="395" rx="138" ry="28" fill="url(#ground)"/>
+ <path d="M161 36C123 37 91 62 82 108L68 175C63 200 54 222 53 253C50 301 53 348 83 376C108 399 158 406 202 398C251 390 286 369 289 329C292 295 274 250 267 213L257 114C252 66 228 37 196 35Z" fill="#10191c" stroke="#131c20" stroke-width="3"/>
+ <path d="M82 110C76 151 65 195 62 231C57 280 63 336 88 361L110 370C81 333 82 280 88 243C91 220 103 204 107 179L117 78Z" fill="url(#rim)" stroke="#46565c" stroke-opacity=".45"/>
+ <path d="M164 32C124 33 96 54 88 103L78 177C77 202 66 225 66 254C63 294 65 338 90 362C114 385 156 391 200 384C241 377 273 362 276 327C279 294 262 250 257 215L248 111C244 63 224 32 193 31Z" fill="url(#body)" stroke="#687476" stroke-opacity=".6"/>
+ <path d="M166 34C127 35 102 57 96 99L85 174C110 184 137 190 170 189L174 42Z" fill="url(#left)" stroke="#788587" stroke-opacity=".45"/>
+ <path d="M186 34L186 190C209 191 236 186 254 177L246 109C241 64 222 35 194 33Z" fill="url(#right)" stroke="#6b7c7e" stroke-opacity=".4"/>
+ <path d="M178 36L178 190M85 182C139 204 211 207 255 183" stroke="#111b20" stroke-width="3"/>
+ <path d="M183 146L183 197" stroke="#0b151a" stroke-width="8"/>
+ <rect x="167" y="71" width="24" height="66" rx="11" fill="#0b1419" stroke="#0d161b" stroke-width="3"/>
+ <rect x="172" y="76" width="14" height="57" rx="6" fill="url(#wheel)"/>
+ <path d="M173 83H185M173 90H185M173 97H185M173 104H185M173 111H185M173 118H185M173 125H185" stroke="#172f3b" stroke-width="2"/>
+ <path d="M80 165L72 201C71 206 75 209 82 207L90 174C91 168 87 165 80 165Z" fill="#64d9e9" stroke="#91f1fa"/>
+ <path d="M71 216L66 249C65 254 69 257 76 254L83 224C84 218 79 215 71 216Z" fill="#44b6d2" stroke="#91e1f4"/>
+ <path d="M90 213C81 244 77 283 84 311" stroke="#67828a" stroke-opacity=".25"/>
+ <path d="M119 222C112 262 120 321 147 356M226 225C245 268 246 319 220 349" stroke="#a0b1b6" stroke-opacity=".055" stroke-width="3"/>
+ <path d="M115 364C153 382 210 378 244 357" stroke="#98aeb2" stroke-opacity=".13"/>
+ <text x="180" y="315" text-anchor="middle" fill="#8b9fa5" fill-opacity=".45" font-family="Arial,sans-serif" font-size="10" letter-spacing="5" transform="rotate(-5 180 315)">HARPE</text>
+ <path d="M164 327L175 334L193 321" stroke="#7e969e" stroke-opacity=".24" stroke-width="2"/>
+</svg>

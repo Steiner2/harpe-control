@@ -1,0 +1,6 @@
+Harpe Control — GPL-3.0-or-later
+
+The browser application and HCEX extension source are distributed under GPL-3.0-or-later. See LICENSE and SPDX notices.
+Protocol adaptation references G-Helper by seerge and its contributors, distributed under GPL-3.0. Preserve that attribution. Upstream sources are linked in docs/SOURCES.md. The Harpe SVG was created for this project; no ASUS or OpenMouse image assets are included.
+
+ASUS, ROG and Harpe Ace are trademarks of their respective owners. This is an independent project. Manufacturer firmware, vendor executables, device configuration dumps, pairing data and personal diagnostics are not included. The project license does not license manufacturer firmware. The small named-macro test fixture is synthetic and contains only test data, not manufacturer code or a device configuration.
