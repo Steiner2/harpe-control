@@ -7,6 +7,8 @@ html=html.replace('<link rel="stylesheet" href="style.css">',()=>'<style>'+fs.re
 for(const name of ['i18n.js','firmware.js','debounce.js','tools-ui.js','protocol.js','macros.js','composer.js','transport.js','firmware-extension/client.js','extension-ui.js','app.js'])html=html.replace('<script src="'+name+'"></script>',()=>'<script>\n'+fs.readFileSync(path.join(src,name),'utf8')+'\n</script>');
 const docs=['USAGE','FIRMWARE-TOOLS','DEBOUNCE','HARDWARE-GUIDE','SOURCES','PUBLISHING'];
 for(const name of docs)html=html.replaceAll('href="'+name+'.md"','href="guides/'+name.toLowerCase()+'.html"');
+// HTML parsing normalizes CRLF before CSP hashes are checked by the browser.
+html=html.replace(/\r\n?/g,'\n');
 const hashes=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>"'sha256-"+createHash('sha256').update(m[1]).digest('base64')+"'");
 const csp="default-src 'self'; script-src 'self' "+hashes.join(' ')+"; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
 html=html.replace('<head>','<head><meta http-equiv="Content-Security-Policy" content="'+csp+'">');
