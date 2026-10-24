@@ -30,6 +30,10 @@ An explicit success on named firmware means the device readbacks match the edito
 
 Names are on the device with named firmware and travel with the mouse. Older firmware cannot store names or verify actual RAM identity; that limitation is shown explicitly. The local draft library remains specific to this website origin and browser. To move drafts between the local HTML file and the hosted site, export/import JSON.
 
+## Custom firmware download
+
+Firmware & recovery has a device-and-firmware dropdown. The P713 E350 option enables custom on-device keyboard macros (one persistent named slot, four run modes, USB only). Select it and use Load selected firmware to verify the download, or Download .bin to save it. Installation still requires physical recovery, an exported backup and the separate FLASH confirmation.
+
 ## Backups and privacy
 
 Settings export is not a full device backup and does not include device macros. Export macro JSON separately. An application dump excludes configuration, calibration and pairing pages. Diagnostics remain local until you choose to share their exported file; inspect them before posting because they can contain macro traffic. The site has no application data upload endpoint.

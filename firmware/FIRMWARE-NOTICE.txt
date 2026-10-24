@@ -1,0 +1,11 @@
+P713 HCEX named-macro firmware — E3505A86
+
+For ROG Harpe Ace Aim Lab Edition (P713), direct wired USB only.
+Adds one persistent named on-device keyboard macro slot with once/repeat/toggle/hold modes. Does not add wireless macros or custom debounce.
+
+This is a modified 8.00.10 application containing manufacturer code and the project's HCEX extension. The GPL license in the repository applies to the project source and does not grant a license to the manufacturer's code. No full-device backup, pairing data, calibration page or personal settings are included in this application-only image.
+
+Limited local hardware tests passed for native installation and name persistence after cold start. The revised browser macro upload and browser flasher still require physical confirmation.
+
+SHA-256 E3505A86C5ECD168C0EEA3C2FDF9DD25D8B8CE5CE95DDA7CFEDEBEC555E68930
+Application window 0x1C000–0x4DFFF, 204800 bytes.

@@ -36,7 +36,7 @@ Push this repository to GitHub, then select **Settings → Pages → Source: Git
 
 ## Firmware source and redistribution
 
-The original HCEX source is included under `harpe-control/firmware-extension/`. A portable patch builder accepts an owner-supplied exact stock application dump; it does not obtain or flash firmware. No manufacturer firmware binaries or private device backups are shipped. See [firmware source instructions](harpe-control/firmware-extension/README.md).
+The original HCEX source is included under `harpe-control/firmware-extension/`. A portable patch builder accepts an owner-supplied exact stock application dump; it does not obtain or flash firmware. The Firmware & recovery page includes the reviewed E350 custom image for the P713, with a device selector and a direct download. Private device backups are never shipped. The compiled image contains manufacturer code; see [the firmware notice](firmware/FIRMWARE-NOTICE.txt). See [firmware source instructions](harpe-control/firmware-extension/README.md).
 
 ## Guides
 

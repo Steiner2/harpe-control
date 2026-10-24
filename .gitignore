@@ -6,6 +6,7 @@ Harpe-Control.html
 **/research/
 **/__pycache__/
 *.bin
+!firmware/P713-HCEX-named-E3505A86.bin
 !harpe-control/test-fixtures/named-macro-v1.bin
 *.elf
 *.zip

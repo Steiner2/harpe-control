@@ -4,7 +4,7 @@ The normal wired interface is ASUS 0B05:1A92. Bootloader mode is 0B05:1A93. **Bo
 
 ## Firmware availability
 
-This public repository and site do not distribute manufacturer firmware, patched manufacturer images or device backups. Bring your own reviewed application image. The browser requires exact length, a known SHA-256 and the original application checksum. Unknown images are rejected. The source patch builder is developer tooling and never installs firmware by itself.
+Under Firmware & recovery, select **ROG Harpe Ace Aim Lab Edition (P713) — Custom on-device macros**. This E350 image adds one persistent named keyboard macro slot with Once, Repeat, Toggle and Hold, over direct USB. Use **Load selected firmware** to download and verify it for the separate flashing steps, or use **Download .bin** to save the image. Selecting or loading does not write to the mouse. The compiled application includes manufacturer code; the project GPL license applies to project source, not that manufacturer code. Private device backups are not distributed. You may also select a local reviewed application image. The browser requires exact length, a known SHA-256 and the original application checksum. Unknown images are rejected. The source patch builder is developer tooling and never installs firmware by itself.
 
 Macros require HCEX on the mouse. Installing the website or granting WebHID access does not install HCEX. Stock firmware can use the supported native settings; its macro upload path is not supported by this project.
 

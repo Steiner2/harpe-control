@@ -1,0 +1,18 @@
+{
+  "images": [
+    {
+      "id": "p713-e350",
+      "device": "ROG Harpe Ace Aim Lab Edition (P713)",
+      "name": "HCEX custom on-device macros",
+      "file": "P713-HCEX-named-E3505A86.bin",
+      "sha256": "E3505A86C5ECD168C0EEA3C2FDF9DD25D8B8CE5CE95DDA7CFEDEBEC555E68930",
+      "bytes": 204800,
+      "features": [
+        "One persistent named macro slot",
+        "Once, repeat, toggle and hold",
+        "Wired USB only"
+      ],
+      "experimental": true
+    }
+  ]
+}

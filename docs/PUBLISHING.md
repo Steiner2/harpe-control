@@ -1,6 +1,6 @@
 # Publish with GitHub Pages
 
-This is the curated public repository. Do not upload the private Tech directory, diagnostic archives, manufacturer applications or device configuration backups.
+This is the curated public repository. Do not upload the private Tech directory, diagnostic archives, vendor installers or device configuration backups. The only intentionally published firmware application is the exact allowlisted E350 image under firmware/.
 
 ## Initial publication
 
@@ -20,4 +20,4 @@ npm run build
 npm run check
 ```
 
-The public firmware tests generate synthetic data with a test-only allowlist loaded in an isolated module. The production exact-image allowlist is unchanged. The only committed binary test fixture is a synthetic named macro record, not manufacturer firmware or a device backup.
+The public firmware tests generate synthetic data with a test-only allowlist loaded in an isolated module. The production exact-image allowlist is unchanged. The only binary test fixture is a synthetic named macro record. The separately published E350 application is checked against its exact hash and size; all other firmware and device dumps remain excluded.

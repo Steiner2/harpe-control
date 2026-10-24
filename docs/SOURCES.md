@@ -1,6 +1,6 @@
 # Sources and license
 
-Harpe Control and its HCEX extension source use GPL-3.0-or-later. Retain LICENSE, NOTICE and SPDX notices. Manufacturer firmware is not included or relicensed.
+Harpe Control and its HCEX extension source use GPL-3.0-or-later. Retain LICENSE, NOTICE and SPDX notices. The optional compiled E350 download includes manufacturer code, which is not relicensed by the project GPL. See the firmware notice shipped beside that image.
 
 ## Protocol references
 

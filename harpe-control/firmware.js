@@ -9,6 +9,8 @@ const IMAGES=Object.freeze({
  '4BBA17CD670679B1813A552E7DACEA11A4E713914EEBAE8D0C1B7251EF68C423':'HCEX persistence startup fix (experimental)',
  'E3505A86C5ECD168C0EEA3C2FDF9DD25D8B8CE5CE95DDA7CFEDEBEC555E68930':'HCEX named macros (limited hardware trial)'
 });
+const CATALOG=Object.freeze({'p713-e350':Object.freeze({device:'ROG Harpe Ace Aim Lab Edition (P713)',url:'firmware/P713-HCEX-named-E3505A86.bin',hash:'E3505A86C5ECD168C0EEA3C2FDF9DD25D8B8CE5CE95DDA7CFEDEBEC555E68930',description:'Custom on-device keyboard macros: one persistent named slot, Once / Repeat / Toggle / Hold. Direct USB only. Experimental; no wireless macros or custom debounce.'})});
+async function loadCatalogImage(id,fetcher=globalThis.fetch){const item=CATALOG[id];if(!item)throw Error('Unknown firmware selection.');const response=await fetcher(item.url,{credentials:'omit',cache:'no-cache'});if(!response.ok)throw Error('Firmware download failed: HTTP '+response.status);const bytes=new Uint8Array(await response.arrayBuffer());const checked=await inspectImage(bytes);if(checked.hash!==item.hash)throw Error('Downloaded firmware does not match the selected device image.');return checked;}
 const STOCK=Object.keys(IMAGES)[0],KNOWN_PARTIAL=new Set(['ACB240027AF20051EEDF16C38CF32FC31C5984CDEE041A9D93E484C2795AF873','646B29B17323A5C4E8A2073E8774C8CFA53A27BCB2E568A88A8222E90EE580FE']);
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function validatePacket(p){
@@ -57,5 +59,5 @@ class Bootloader{
  }
  async restart(){if(this.busy||!this.verifiedHash)throw Error('Restart requires a completely verified known application.');this.busy=true;try{const expected=this.verifiedHash;await this.check();if(await sha(await this.readAll())!==expected){this.verifiedHash=null;throw Error('Application changed after verification. Stay in bootloader.');}await this.link.send([0x11,255]);this.verifiedHash=null;}finally{this.busy=false}}
 }
-const api={START,SIZE,PAGE,END,IMAGES,STOCK,sha,inspectImage,plan,windowCheck,validatePacket,WebHIDLink,Bootloader};if(typeof module!=='undefined')module.exports=api;else root.HarpeFirmware=api;
+const api={CATALOG,loadCatalogImage,START,SIZE,PAGE,END,IMAGES,STOCK,sha,inspectImage,plan,windowCheck,validatePacket,WebHIDLink,Bootloader};if(typeof module!=='undefined')module.exports=api;else root.HarpeFirmware=api;
 })(globalThis);
