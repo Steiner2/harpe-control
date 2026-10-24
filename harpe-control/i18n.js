@@ -1,11 +1,11 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 (function(root){'use strict';
 const pairs={
- 'Application backup (optional)':'Anwendungssicherung (optional)',
- 'I accept the risk of flashing, including proceeding without a backup.':'Ich akzeptiere das Risiko des Flashens, auch ohne Sicherung.',
- 'Selecting or loading an image does not flash your mouse. An application backup is optional. Flash at your own risk.':'Auswahl und Laden flashen die Maus nicht. Eine Anwendungssicherung ist optional. Flashen auf eigene Gefahr.',
- 'Backup export requested. Keep both files for recovery.':'Sicherungsexport angefordert. Beide Dateien zur Wiederherstellung aufbewahren.',
- 'Bootloader detected · 2.00.19. Application backup is optional. Load a checked image to continue.':'Bootloader erkannt · 2.00.19. Anwendungssicherung ist optional. Zum Fortfahren ein geprüftes Abbild laden.',
+ 'Anwendungssicherung (optional)':'Application backup (optional)',
+ 'Ich akzeptiere das Risiko des Flashens, auch ohne Sicherung.':'I accept the risk of flashing, including proceeding without a backup.',
+ 'Auswahl und Laden flashen die Maus nicht. Eine Anwendungssicherung ist optional. Flashen auf eigene Gefahr.':'Selecting or loading an image does not flash your mouse. An application backup is optional. Flash at your own risk.',
+ 'Sicherungsexport angefordert. Beide Dateien zur Wiederherstellung aufbewahren.':'Backup export requested. Keep both files for recovery.',
+ 'Bootloader erkannt · 2.00.19. Anwendungssicherung ist optional. Zum Fortfahren ein geprüftes Abbild laden.':'Bootloader detected · 2.00.19. Application backup is optional. Load a checked image to continue.',
  'Makros':'Macros','Mauseinstellungen':'Mouse settings','Erweitert':'Advanced','Firmware & Recovery':'Firmware & recovery','DEINE MAUS':'YOUR MOUSE','DEINE MAKROS':'YOUR MACROS','DEIN SETUP, DEINE REGELN':'YOUR MOUSE, MORE CONTROL',
  'Noch keine gespeicherten Entwürfe.':'No saved drafts yet.','Dein aktueller Entwurf bleibt automatisch erhalten.':'Your current draft is kept automatically.','Makro importieren':'Import macro','JSON-Datei öffnen':'Open JSON file','JSON einfügen':'Paste JSON','Makro als JSON':'Macro JSON','Importieren':'Import','Lokal. Ohne Konto. Ohne Cloud.':'Local. No account. No cloud.','UNABHÄNGIGES PROJEKT':'INDEPENDENT PROJECT',
  'Aus einer Taste wird dein Ablauf. Ganz ohne Herstellersoftware.':'Turn one button into your sequence. No vendor software needed.','Nur auf deinem Gerät':'Only on your device','Makro anwenden ↗':'Apply macro ↗','ROG Harpe Ace':'ROG Harpe Ace','Direkt per USB-Kabel verbinden':'Connect directly with a USB cable','Maus verbinden ↗':'Connect mouse ↗','Trennen':'Disconnect','Demo ansehen':'View demo','Keine Maus verbunden. Du kannst deinen Ablauf schon vorbereiten.':'No mouse connected. Start with settings or firmware detection.',
